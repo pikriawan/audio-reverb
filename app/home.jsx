@@ -29,6 +29,10 @@ export default function Home() {
             console.log(message);
         }
 
+        function onProgress({ progress }) {
+            console.log(`progress: ${progress}`);
+        }
+
         async function load() {
             setIsLoading(true);
 
@@ -36,6 +40,7 @@ export default function Home() {
             const ffmpeg = ffmpegRef.current;
 
             ffmpeg.on("log", onLog);
+            ffmpeg.on("progress", onProgress);
 
             await ffmpeg.load({
                 coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
@@ -50,6 +55,7 @@ export default function Home() {
 
         return () => {
             ffmpegRef.current.off("log", onLog);
+            ffmpegRef.current.off("progress", onProgress);
         };
     }, []);
 
