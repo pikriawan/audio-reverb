@@ -19,7 +19,7 @@ export default function Home() {
     const impulseResponseId = useId();
     const [loaded, setLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [speed, setSpeed] = useState(0.9);
+    const [speed, setSpeed] = useState(1);
     const [sourceURL, setSourceURL] = useState(null);
     const [outputURL, setOutputURL] = useState(null);
     const [impulseResponseFilled, setImpulseResponseFilled] = useState(false);
@@ -144,7 +144,7 @@ export default function Home() {
                         </Field>
                         <Field>
                             <input type="hidden" name="speed" value={speed} />
-                            <Slider min={0.5} max={2} step={0.05} value={speed} onValueChange={(value) => setSpeed(value)}>
+                            <Slider min={0.5} max={1.5} step={0.025} value={speed} onValueChange={(value) => setSpeed(value)}>
                                 <div className="mb-2 flex items-center justify-between gap-1">
                                     <FieldLabel>Speed</FieldLabel>
                                     <SliderValue />
