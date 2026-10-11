@@ -2,35 +2,31 @@
 
 import { AudioPlayer } from "@/components/ui/audio-player";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldItem, FieldLabel } from "@/components/ui/field";
+import { Fieldset, FieldsetLegend } from "@/components/ui/fieldset";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Radio, RadioGroup } from "@/components/ui/radio-group";
 import { Slider, SliderValue } from "@/components/ui/slider";
 import { Spinner } from "@/components/ui/spinner";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
-import { RotateCcw } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 
 export default function Home() {
     const ffmpegRef = useRef(new FFmpeg());
-    const impulseResponseRef = useRef(null);
     const sourceId = useId();
-    const impulseResponseId = useId();
+    const customImpulseResponseId = useId();
     const [loaded, setLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [speed, setSpeed] = useState(1);
     const [sourceURL, setSourceURL] = useState(null);
     const [outputURL, setOutputURL] = useState(null);
-    const [impulseResponseFilled, setImpulseResponseFilled] = useState(false);
+    const [customImpulseResponseSelected, setCustomImpulseResponseSelected] = useState(false);
 
     useEffect(() => {
         function onLog({ message }) {
             console.log(message);
-        }
-
-        function onProgress({ progress }) {
-            console.log(`progress: ${progress}`);
         }
 
         async function load() {
@@ -40,7 +36,6 @@ export default function Home() {
             const ffmpeg = ffmpegRef.current;
 
             ffmpeg.on("log", onLog);
-            ffmpeg.on("progress", onProgress);
 
             await ffmpeg.load({
                 coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
@@ -55,7 +50,6 @@ export default function Home() {
 
         return () => {
             ffmpegRef.current.off("log", onLog);
-            ffmpegRef.current.off("progress", onProgress);
         };
     }, []);
 
@@ -76,7 +70,31 @@ export default function Home() {
         const ffmpeg = ffmpegRef.current;
 
         await ffmpeg.writeFile("source.mp3", await fetchFile(source));
-        await ffmpeg.writeFile("impulse-response.wav", await fetchFile(impulseResponse.size > 0 ? impulseResponse : "/impulse-response.wav"));
+
+        let impulseResponseFile = null;
+
+        switch (impulseResponse) {
+            case "concert-hall":
+                impulseResponseFile = "/impulse-responses/concert-hall.wav";
+                break;
+            case "tennis-court":
+                impulseResponseFile = "/impulse-responses/tennis-court.wav";
+                break;
+            case "tower":
+                impulseResponseFile = "/impulse-responses/tower.wav";
+                break;
+            case "auditorium":
+                impulseResponseFile = "/impulse-responses/auditorium.wav";
+                break;
+            case "forest":
+                impulseResponseFile = "/impulse-responses/forest.wav";
+                break;
+            case "custom":
+                impulseResponseFile = data.get("customImpulseResponse");
+                break;
+        }
+
+        await ffmpeg.writeFile("impulse-response.wav", await fetchFile(impulseResponseFile));
 
         await ffmpeg.exec([
             "-i",
@@ -108,21 +126,6 @@ export default function Home() {
         setOutputURL(URL.createObjectURL(new Blob([outputData.buffer], { type: "audio/mpeg" })));
     }
 
-    function onImpulseResponseChange(event) {
-        if (event.target.files) {
-            setImpulseResponseFilled(true);
-        }
-    }
-
-    function resetImpulseResponse() {
-        if (!impulseResponseRef.current) {
-            return;
-        }
-
-        impulseResponseRef.current.value = "";
-        setImpulseResponseFilled(false);
-    }
-
     return (
         <div className="p-4 flex flex-col gap-4 items-center">
             {loaded ? (
@@ -133,14 +136,49 @@ export default function Home() {
                             <FieldLabel htmlFor={sourceId}>Source (.mp3)</FieldLabel>
                             <Input type="file" id={sourceId} name="source" accept=".mp3,audio/mpeg" required />
                         </Field>
-                        <Field>
-                            <FieldLabel htmlFor={impulseResponseId}>Impulse response (.wav, optional)</FieldLabel>
-                            <div className="w-full flex gap-2">
-                                <Input type="file" id={impulseResponseId} name="impulseResponse" accept=".wav,audio/wav" onChange={onImpulseResponseChange} ref={impulseResponseRef} />
-                                <Button variant="ghost" onClick={resetImpulseResponse} disabled={!impulseResponseFilled}>
-                                    <RotateCcw />
-                                </Button>
-                            </div>
+                        <Field className="gap-2" name="impulseResponse" render={(props) => <Fieldset {...props} />}>
+                            <FieldsetLegend className="font-medium text-sm">Impulse response</FieldsetLegend>
+                            <RadioGroup defaultValue="concert-hall" onChange={(event) => setCustomImpulseResponseSelected(event.target.value === "custom")}>
+                                <FieldItem>
+                                    <FieldLabel>
+                                        <Radio value="concert-hall" />
+                                        Concert Hall
+                                    </FieldLabel>
+                                </FieldItem>
+                                <FieldItem>
+                                    <FieldLabel>
+                                        <Radio value="tennis-court" />
+                                        Tennis Court
+                                    </FieldLabel>
+                                </FieldItem>
+                                <FieldItem>
+                                    <FieldLabel>
+                                        <Radio value="tower" />
+                                        Tower
+                                    </FieldLabel>
+                                </FieldItem>
+                                <FieldItem>
+                                    <FieldLabel>
+                                        <Radio value="auditorium" />
+                                        Auditorium
+                                    </FieldLabel>
+                                </FieldItem>
+                                <FieldItem>
+                                    <FieldLabel>
+                                        <Radio value="forest" />
+                                        Forest
+                                    </FieldLabel>
+                                </FieldItem>
+                                <FieldItem>
+                                    <FieldLabel>
+                                        <Radio value="custom" />
+                                        Custom (.wav)
+                                    </FieldLabel>
+                                </FieldItem>
+                            </RadioGroup>
+                        </Field>
+                        <Field className={customImpulseResponseSelected ? "" : "hidden"}>
+                            <Input type="file" id={customImpulseResponseId} name="customImpulseResponse" accept=".wav,audio/wav" required={customImpulseResponseSelected} />
                         </Field>
                         <Field>
                             <input type="hidden" name="speed" value={speed} />
@@ -162,11 +200,11 @@ export default function Home() {
                     </Form>
                     <div className="w-full max-w-sm flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
-                            <span>Original</span>
+                            <span className="font-medium text-sm">Original</span>
                             <AudioPlayer src={sourceURL} loop downloadable />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <span>Convolved</span>
+                            <span className="font-medium text-sm">Convolved</span>
                             <AudioPlayer src={outputURL} loop downloadable />
                         </div>
                     </div>
