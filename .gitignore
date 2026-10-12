@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/public/assets/ffmpeg-core.js
+/public/assets/ffmpeg-core.wasm

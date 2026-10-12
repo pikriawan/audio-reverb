@@ -10,7 +10,7 @@ import { Radio, RadioGroup } from "@/components/ui/radio-group";
 import { Slider, SliderValue } from "@/components/ui/slider";
 import { Spinner } from "@/components/ui/spinner";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import { fetchFile } from "@ffmpeg/util";
 import { useEffect, useId, useRef, useState } from "react";
 
 export default function Home() {
@@ -31,15 +31,13 @@ export default function Home() {
 
         async function load() {
             setIsLoading(true);
-
-            const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
             const ffmpeg = ffmpegRef.current;
 
             ffmpeg.on("log", onLog);
 
             await ffmpeg.load({
-                coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-                wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm")
+                coreURL: "/assets/ffmpeg-core.js",
+                wasmURL: "/assets/ffmpeg-core.wasm"
             });
 
             setLoaded(true);
