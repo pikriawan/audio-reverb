@@ -197,14 +197,18 @@ export default function Home() {
                         </Button>
                     </Form>
                     <div className="w-full max-w-sm flex flex-col gap-4">
-                        <div className="flex flex-col gap-2">
-                            <span className="font-medium text-sm">Asli</span>
-                            <AudioPlayer src={sourceURL} loop downloadable />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <span className="font-medium text-sm">Reverb</span>
-                            <AudioPlayer src={outputURL} loop downloadable />
-                        </div>
+                        {sourceURL && (
+                            <div className="flex flex-col gap-2">
+                                <span className="font-medium text-sm">Asli</span>
+                                <AudioPlayer src={sourceURL} loop downloadable />
+                            </div>
+                        )}
+                        {outputURL && (
+                            <div className="flex flex-col gap-2">
+                                <span className="font-medium text-sm">Reverb</span>
+                                <AudioPlayer src={outputURL} loop downloadable />
+                            </div>
+                        )}
                     </div>
                 </>
             ) : (
