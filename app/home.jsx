@@ -128,10 +128,10 @@ export default function Home() {
         <div className="p-4 flex flex-col gap-4 items-center">
             {loaded ? (
                 <>
-                    <h1 className="text-lg font-semibold text-center">Convolver</h1>
+                    <h1 className="text-lg font-semibold text-center">Audio Reverb</h1>
                     <Form className="w-full max-w-sm flex flex-col gap-4" onSubmit={onSubmit}>
                         <Field>
-                            <FieldLabel htmlFor={sourceId}>Source (.mp3)</FieldLabel>
+                            <FieldLabel htmlFor={sourceId}>Input (.mp3)</FieldLabel>
                             <Input type="file" id={sourceId} name="source" accept=".mp3,audio/mpeg" required />
                         </Field>
                         <Field className="gap-2" name="impulseResponse" render={(props) => <Fieldset {...props} />}>
@@ -140,19 +140,19 @@ export default function Home() {
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="concert-hall" />
-                                        Concert Hall
+                                        Aula konser
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="tennis-court" />
-                                        Tennis Court
+                                        Lapangan tenis
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="tower" />
-                                        Tower
+                                        Menara
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
@@ -164,13 +164,13 @@ export default function Home() {
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="forest" />
-                                        Forest
+                                        Hutan
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="custom" />
-                                        Custom (.wav)
+                                        Kustom (.wav)
                                     </FieldLabel>
                                 </FieldItem>
                             </RadioGroup>
@@ -182,7 +182,7 @@ export default function Home() {
                             <input type="hidden" name="speed" value={speed} />
                             <Slider min={0.5} max={1.5} step={0.025} value={speed} onValueChange={(value) => setSpeed(value)}>
                                 <div className="mb-2 flex items-center justify-between gap-1">
-                                    <FieldLabel>Speed</FieldLabel>
+                                    <FieldLabel>Kecepatan</FieldLabel>
                                     <SliderValue />
                                 </div>
                             </Slider>
@@ -191,18 +191,18 @@ export default function Home() {
                             {isLoading ? (
                                 <>
                                     <Spinner />
-                                    Processing...
+                                    Memproses...
                                 </>
-                            ) : "Convolve"}
+                            ) : "Reverb"}
                         </Button>
                     </Form>
                     <div className="w-full max-w-sm flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
-                            <span className="font-medium text-sm">Original</span>
+                            <span className="font-medium text-sm">Asli</span>
                             <AudioPlayer src={sourceURL} loop downloadable />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <span className="font-medium text-sm">Convolved</span>
+                            <span className="font-medium text-sm">Reverb</span>
                             <AudioPlayer src={outputURL} loop downloadable />
                         </div>
                     </div>
@@ -211,8 +211,8 @@ export default function Home() {
                 <>
                     <Spinner />
                     <div className="flex flex-col gap-2">
-                        <p className="text-center">Loading ffmpeg</p>
-                        <p className="text-center">This might take a while</p>
+                        <p className="text-center">Memuat ffmpeg</p>
+                        <p className="text-center">Ini mungkin butuh waktu agak lama</p>
                     </div>
                 </>
             )}
