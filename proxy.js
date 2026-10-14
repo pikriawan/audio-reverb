@@ -2,10 +2,11 @@ import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import { NextResponse } from "next/server";
 
-let locales = ["en-US", "id-ID"];
+const locales = ["en-US", "id-ID"];
 
 function getLocale(request) {
-    let languages = new Negotiator({ headers: request.headers }).languages();
+    const headers = { "accept-language": request.headers.get("accept-language") };
+    let languages = new Negotiator({ headers }).languages();
     let defaultLocale = "en-US";
     return match(languages, locales, defaultLocale);
 }
