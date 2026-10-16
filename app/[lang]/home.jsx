@@ -13,7 +13,7 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import { useEffect, useId, useRef, useState } from "react";
 
-export default function Home() {
+export default function Home({ dictionary }) {
     const ffmpegRef = useRef(new FFmpeg());
     const sourceId = useId();
     const customImpulseResponseId = useId();
@@ -215,8 +215,8 @@ export default function Home() {
                 <>
                     <Spinner />
                     <div className="flex flex-col gap-2">
-                        <p className="text-center">Memuat ffmpeg</p>
-                        <p className="text-center">Ini mungkin butuh waktu agak lama</p>
+                        <p className="text-center">{dictionary.loading.title}</p>
+                        <p className="text-center">{dictionary.loading.message}</p>
                     </div>
                 </>
             )}

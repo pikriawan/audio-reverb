@@ -3,10 +3,10 @@
 import Home from "./home";
 import NoSsrWrapper from "./no-ssr-wrapper";
 
-export default function HomePage() {
+export default function HomeWrapper({ dictionary }) {
     return (
         <NoSsrWrapper>
-            <Home />
+            <Home dictionary={dictionary} />
         </NoSsrWrapper>
     );
 }

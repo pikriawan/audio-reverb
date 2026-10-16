@@ -2,12 +2,12 @@ import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import { NextResponse } from "next/server";
 
-const locales = ["en-US", "id-ID"];
+const locales = ["en", "id"];
 
 function getLocale(request) {
     const headers = { "accept-language": request.headers.get("accept-language") };
     let languages = new Negotiator({ headers }).languages();
-    let defaultLocale = "en-US";
+    let defaultLocale = "en";
     return match(languages, locales, defaultLocale);
 }
 
@@ -28,7 +28,5 @@ export function proxy(request) {
 }
 
 export const config = {
-    matcher: [
-        "/((?!_next).*)"
-    ]
+    matcher: ["/"]
 };
