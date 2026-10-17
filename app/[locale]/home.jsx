@@ -1,5 +1,9 @@
 "use client";
 
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import { fetchFile } from "@ffmpeg/util";
+import { useTranslations } from "next-intl";
+import { useEffect, useId, useRef, useState } from "react";
 import { AudioPlayer } from "@/components/ui/audio-player";
 import { Button } from "@/components/ui/button";
 import { Field, FieldItem, FieldLabel } from "@/components/ui/field";
@@ -9,11 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Radio, RadioGroup } from "@/components/ui/radio-group";
 import { Slider, SliderValue } from "@/components/ui/slider";
 import { Spinner } from "@/components/ui/spinner";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
-import { useEffect, useId, useRef, useState } from "react";
 
-export default function Home({ dictionary }) {
+export default function Home() {
     const ffmpegRef = useRef(new FFmpeg());
     const sourceId = useId();
     const customImpulseResponseId = useId();
@@ -23,6 +24,7 @@ export default function Home({ dictionary }) {
     const [sourceURL, setSourceURL] = useState(null);
     const [outputURL, setOutputURL] = useState(null);
     const [customImpulseResponseSelected, setCustomImpulseResponseSelected] = useState(false);
+    const t = useTranslations();
 
     useEffect(() => {
         function onLog({ message }) {
@@ -140,37 +142,37 @@ export default function Home({ dictionary }) {
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="concert-hall" />
-                                        Aula konser
+                                        {t("impulse_response.concert_hall")}
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="tennis-court" />
-                                        Lapangan tenis
+                                        {t("impulse_response.tennis_court")}
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="tower" />
-                                        Menara
+                                        {t("impulse_response.tower")}
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="auditorium" />
-                                        Auditorium
+                                        {t("impulse_response.auditorium")}
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="forest" />
-                                        Hutan
+                                        {t("impulse_response.forest")}
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="custom" />
-                                        Kustom (.wav)
+                                        {t("impulse_response.custom")}
                                     </FieldLabel>
                                 </FieldItem>
                             </RadioGroup>
@@ -182,7 +184,7 @@ export default function Home({ dictionary }) {
                             <input type="hidden" name="speed" value={speed} />
                             <Slider min={0.5} max={1.5} step={0.025} value={speed} onValueChange={(value) => setSpeed(value)}>
                                 <div className="mb-2 flex items-center justify-between gap-1">
-                                    <FieldLabel>Kecepatan</FieldLabel>
+                                    <FieldLabel>{t("label.speed")}</FieldLabel>
                                     <SliderValue />
                                 </div>
                             </Slider>
@@ -191,7 +193,7 @@ export default function Home({ dictionary }) {
                             {isLoading ? (
                                 <>
                                     <Spinner />
-                                    Memproses...
+                                    {t("label.processing")}
                                 </>
                             ) : "Reverb"}
                         </Button>
@@ -199,7 +201,7 @@ export default function Home({ dictionary }) {
                     <div className="w-full max-w-sm flex flex-col gap-4">
                         {sourceURL && (
                             <div className="flex flex-col gap-2">
-                                <span className="font-medium text-sm">Asli</span>
+                                <span className="font-medium text-sm">{t("label.original")}</span>
                                 <AudioPlayer src={sourceURL} loop downloadable />
                             </div>
                         )}
@@ -215,8 +217,8 @@ export default function Home({ dictionary }) {
                 <>
                     <Spinner />
                     <div className="flex flex-col gap-2">
-                        <p className="text-center">{dictionary.loading.title}</p>
-                        <p className="text-center">{dictionary.loading.message}</p>
+                        <p className="text-center">{t("loading.title")}</p>
+                        <p className="text-center">{t("loading.message")}</p>
                     </div>
                 </>
             )}
