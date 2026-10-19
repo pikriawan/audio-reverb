@@ -10,9 +10,15 @@ import { Field, FieldItem, FieldLabel } from "@/components/ui/field";
 import { Fieldset, FieldsetLegend } from "@/components/ui/fieldset";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Radio, RadioGroup } from "@/components/ui/radio-group";
+import { Radio, RadioGroup, RadioGroupPrimitive, RadioPrimitive } from "@/components/ui/radio-group";
 import { Slider, SliderValue } from "@/components/ui/slider";
 import { Spinner } from "@/components/ui/spinner";
+import { segmentedControlItemVariants, segmentedControlRootClassName } from "@/lib/segmented-control";
+
+const itemClassName = segmentedControlItemVariants({
+    className: "grow",
+    state: "checked"
+});
 
 export default function Home() {
     const ffmpegRef = useRef(new FFmpeg());
@@ -130,7 +136,21 @@ export default function Home() {
         <div className="p-4 flex flex-col gap-4 items-center">
             {loaded ? (
                 <>
-                    <h1 className="text-lg font-semibold text-center">Audio Reverb</h1>
+                    <h1 className="w-full max-w-sm text-lg font-semibold text-center">Audio Reverb</h1>
+                    <div className="w-full max-w-sm flex justify-end">
+                        <RadioGroupPrimitive
+                            aria-label="Language"
+                            className={segmentedControlRootClassName}
+                            defaultValue="en"
+                        >
+                            <RadioPrimitive.Root className={itemClassName} value="en">
+                                en
+                            </RadioPrimitive.Root>
+                            <RadioPrimitive.Root className={itemClassName} value="id">
+                                id
+                            </RadioPrimitive.Root>
+                        </RadioGroupPrimitive>
+                    </div>
                     <Form className="w-full max-w-sm flex flex-col gap-4" onSubmit={onSubmit}>
                         <Field>
                             <FieldLabel htmlFor={sourceId}>Input (.mp3)</FieldLabel>
