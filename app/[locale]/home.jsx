@@ -2,7 +2,7 @@
 
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState } from "react";
 import { AudioPlayer } from "@/components/ui/audio-player";
 import { Button } from "@/components/ui/button";
@@ -10,14 +10,15 @@ import { Field, FieldItem, FieldLabel } from "@/components/ui/field";
 import { Fieldset, FieldsetLegend } from "@/components/ui/fieldset";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Radio, RadioGroup, RadioGroupPrimitive, RadioPrimitive } from "@/components/ui/radio-group";
+import { Radio, RadioGroup } from "@/components/ui/radio-group";
 import { Slider, SliderValue } from "@/components/ui/slider";
 import { Spinner } from "@/components/ui/spinner";
+import { Link } from "@/i18n/navigation";
 import { segmentedControlItemVariants, segmentedControlRootClassName } from "@/lib/segmented-control";
 
 const itemClassName = segmentedControlItemVariants({
-    className: "grow",
-    state: "checked"
+    size: "sm",
+    state: "current"
 });
 
 export default function Home() {
@@ -31,6 +32,7 @@ export default function Home() {
     const [outputURL, setOutputURL] = useState(null);
     const [customImpulseResponseSelected, setCustomImpulseResponseSelected] = useState(false);
     const t = useTranslations();
+    const locale = useLocale();
 
     useEffect(() => {
         function onLog({ message }) {
@@ -138,18 +140,16 @@ export default function Home() {
                 <>
                     <h1 className="w-full max-w-sm text-lg font-semibold text-center">Audio Reverb</h1>
                     <div className="w-full max-w-sm flex justify-end">
-                        <RadioGroupPrimitive
-                            aria-label="Language"
-                            className={segmentedControlRootClassName}
-                            defaultValue="en"
-                        >
-                            <RadioPrimitive.Root className={itemClassName} value="en">
-                                en
-                            </RadioPrimitive.Root>
-                            <RadioPrimitive.Root className={itemClassName} value="id">
-                                id
-                            </RadioPrimitive.Root>
-                        </RadioGroupPrimitive>
+                        <nav aria-label="Languages">
+                            <div className={segmentedControlRootClassName}>
+                                <Link aria-current={locale === "en" ? "page" : undefined} className={itemClassName} href="/" locale="en">
+                                    en
+                                </Link>
+                                <Link aria-current={locale === "id" ? "page" : undefined} className={itemClassName} href="/" locale="id">
+                                    id
+                                </Link>
+                            </div>
+                        </nav>
                     </div>
                     <Form className="w-full max-w-sm flex flex-col gap-4" onSubmit={onSubmit}>
                         <Field>
