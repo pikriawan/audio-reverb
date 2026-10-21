@@ -64,6 +64,10 @@ export function AudioPlayer({ src, loop = false, downloadable = false }) {
             audioRef.current.removeEventListener("timeupdate", onTimeUpdate);
             audioRef.current.removeEventListener("play", onPlay);
             audioRef.current.removeEventListener("pause", onPause);
+            audioRef.current.pause();
+            audioRef.current.removeAttribute("src");
+            audioRef.current.load();
+            audioRef.current = null;
         };
     }, [src, loop, downloadable]);
 
