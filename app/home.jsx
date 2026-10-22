@@ -2,7 +2,6 @@
 
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
-import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState } from "react";
 import { AudioPlayer } from "@/components/ui/audio-player";
 import { Button } from "@/components/ui/button";
@@ -13,13 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Radio, RadioGroup } from "@/components/ui/radio-group";
 import { Slider, SliderValue } from "@/components/ui/slider";
 import { Spinner } from "@/components/ui/spinner";
-import { Link } from "@/i18n/navigation";
-import { segmentedControlItemVariants, segmentedControlRootClassName } from "@/lib/segmented-control";
-
-const itemClassName = segmentedControlItemVariants({
-    size: "sm",
-    state: "current"
-});
 
 export default function Home() {
     const ffmpegRef = useRef(new FFmpeg());
@@ -31,8 +23,6 @@ export default function Home() {
     const [sourceURL, setSourceURL] = useState(null);
     const [outputURL, setOutputURL] = useState(null);
     const [customImpulseResponseSelected, setCustomImpulseResponseSelected] = useState(false);
-    const t = useTranslations();
-    const locale = useLocale();
 
     useEffect(() => {
         function onLog({ message }) {
@@ -139,18 +129,6 @@ export default function Home() {
             {loaded ? (
                 <>
                     <h1 className="w-full max-w-sm text-lg font-semibold text-center">Audio Reverb</h1>
-                    <div className="w-full max-w-sm flex justify-end">
-                        <nav aria-label="Languages">
-                            <div className={segmentedControlRootClassName}>
-                                <Link aria-current={locale === "en" ? "page" : undefined} className={itemClassName} href="/" locale="en">
-                                    en
-                                </Link>
-                                <Link aria-current={locale === "id" ? "page" : undefined} className={itemClassName} href="/" locale="id">
-                                    id
-                                </Link>
-                            </div>
-                        </nav>
-                    </div>
                     <Form className="w-full max-w-sm flex flex-col gap-4" onSubmit={onSubmit}>
                         <Field>
                             <FieldLabel htmlFor={sourceId}>Input (.mp3)</FieldLabel>
@@ -162,37 +140,37 @@ export default function Home() {
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="concert-hall" />
-                                        {t("impulse_response.concert_hall")}
+                                        Aula konser
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="tennis-court" />
-                                        {t("impulse_response.tennis_court")}
+                                        Lapangan tenis
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="tower" />
-                                        {t("impulse_response.tower")}
+                                        Menara
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="auditorium" />
-                                        {t("impulse_response.auditorium")}
+                                        Auditorium
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="forest" />
-                                        {t("impulse_response.forest")}
+                                        Hutan
                                     </FieldLabel>
                                 </FieldItem>
                                 <FieldItem>
                                     <FieldLabel>
                                         <Radio value="custom" />
-                                        {t("impulse_response.custom")}
+                                        Kustom (.wav)
                                     </FieldLabel>
                                 </FieldItem>
                             </RadioGroup>
@@ -204,7 +182,7 @@ export default function Home() {
                             <input type="hidden" name="speed" value={speed} />
                             <Slider min={0.5} max={1.5} step={0.025} value={speed} onValueChange={(value) => setSpeed(value)}>
                                 <div className="mb-2 flex items-center justify-between gap-1">
-                                    <FieldLabel>{t("label.speed")}</FieldLabel>
+                                    <FieldLabel>Kecepatan</FieldLabel>
                                     <SliderValue />
                                 </div>
                             </Slider>
@@ -213,7 +191,7 @@ export default function Home() {
                             {isLoading ? (
                                 <>
                                     <Spinner />
-                                    {t("label.processing")}
+                                    Memproses...
                                 </>
                             ) : "Reverb"}
                         </Button>
@@ -221,7 +199,7 @@ export default function Home() {
                     <div className="w-full max-w-sm flex flex-col gap-4">
                         {sourceURL && (
                             <div className="flex flex-col gap-2">
-                                <span className="font-medium text-sm">{t("label.original")}</span>
+                                <span className="font-medium text-sm">Asli</span>
                                 <AudioPlayer src={sourceURL} loop downloadable />
                             </div>
                         )}
@@ -236,10 +214,7 @@ export default function Home() {
             ) : (
                 <>
                     <Spinner />
-                    <div className="flex flex-col gap-2">
-                        <p className="text-center">{t("loading.title")}</p>
-                        <p className="text-center">{t("loading.message")}</p>
-                    </div>
+                    <p className="text-center">Mengunduh FFmpeg</p>
                 </>
             )}
         </div>
