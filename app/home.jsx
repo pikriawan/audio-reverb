@@ -9,6 +9,7 @@ import { Field, FieldItem, FieldLabel } from "@/components/ui/field";
 import { Fieldset, FieldsetLegend } from "@/components/ui/fieldset";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { Radio, RadioGroup } from "@/components/ui/radio-group";
 import { Slider, SliderValue } from "@/components/ui/slider";
 import { Spinner } from "@/components/ui/spinner";
@@ -23,10 +24,21 @@ export default function Home() {
     const [sourceURL, setSourceURL] = useState(null);
     const [outputURL, setOutputURL] = useState(null);
     const [customImpulseResponseSelected, setCustomImpulseResponseSelected] = useState(false);
+    const [progress, setProgress] = useState(null);
 
     useEffect(() => {
         function onLog({ message }) {
             console.log(message);
+        }
+
+        function onProgress({ progress: p }) {
+            if (p > 2) {
+                setProgress(null);
+            } else if (p === 1) {
+                setProgress(100);
+            } else {
+                setProgress(p * 100);
+            }
         }
 
         async function load() {
@@ -34,6 +46,7 @@ export default function Home() {
             const ffmpeg = ffmpegRef.current;
 
             ffmpeg.on("log", onLog);
+            ffmpeg.on("progress", onProgress);
 
             await ffmpeg.load({
                 coreURL: "/assets/ffmpeg-core.js",
@@ -48,6 +61,7 @@ export default function Home() {
 
         return () => {
             ffmpegRef.current.off("log", onLog);
+            ffmpegRef.current.off("progress", onProgress);
         };
     }, []);
 
@@ -187,6 +201,9 @@ export default function Home() {
                                 </div>
                             </Slider>
                         </Field>
+                        {progress !== null && (
+                            <Progress aria-label="Loading progress" value={progress} />
+                        )}
                         <Button type="submit" disabled={isLoading}>
                             {isLoading ? (
                                 <>
